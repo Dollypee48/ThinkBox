@@ -1,25 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../features/auth/authSlice";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { HiMenu, HiX } from "react-icons/hi";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    dispatch(logout());
-    setTimeout(() => {
-      navigate("/");
-    }, 0);
+    logout();
+    navigate("/");
+    setMenuOpen(false);
   };
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md px-6 py-4">
@@ -34,53 +29,40 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div className={`md:flex items-center space-x-4 ${menuOpen ? "block mt-4" : "hidden md:block mt-0"}`}>
+        <div
+          className={`${
+            menuOpen
+              ? "block absolute top-16 left-0 right-0 bg-white shadow-md p-4 space-y-4 md:space-y-0 md:space-x-4 md:flex"
+              : "hidden md:flex items-center space-x-4"
+          }`}
+        >
           {user ? (
             <>
-              <Link
-                to="/dashboard"
-                className="block text-gray-700 hover:text-purple-700 font-medium py-1"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/dashboard" className="nav-link" onClick={toggleMenu}>
                 Dashboard
               </Link>
-              <Link
-                to="/submit"
-                className="block text-gray-700 hover:text-purple-700 font-medium py-1"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/submit" className="nav-link" onClick={toggleMenu}>
                 Submit Problem
               </Link>
-              <Link
-                to="/problems"
-                className="block text-gray-700 hover:text-purple-700 font-medium py-1"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/problems" className="nav-link" onClick={toggleMenu}>
                 My Problems
               </Link>
               <button
-                onClick={() => {
-                  handleLogout();
-                  setMenuOpen(false);
-                }}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded font-medium"
+                onClick={handleLogout}
+                className="nav-button bg-red-500 hover:bg-red-600"
               >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="block text-gray-700 hover:text-purple-700 font-medium py-1"
-                onClick={() => setMenuOpen(false)}
-              >
+              <Link to="/login" className="nav-link" onClick={toggleMenu}>
                 Login
               </Link>
               <Link
                 to="/register"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded font-medium"
-                onClick={() => setMenuOpen(false)}
+                className="nav-button bg-purple-600 hover:bg-purple-700"
+                onClick={toggleMenu}
               >
                 Get Started
               </Link>
