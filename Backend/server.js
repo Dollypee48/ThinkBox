@@ -18,6 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/problems", require("./routes/problemRoutes"));
 
+app.get("/", (req, res) => {
+  res.send("ThinkBox backend is running ✅");
+});
+
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
   app.listen(PORT, () => {
