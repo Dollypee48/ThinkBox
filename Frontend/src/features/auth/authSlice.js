@@ -8,21 +8,22 @@ const initialState = {
   user: user || null,
   loading: false,
   error: null,
+  success: false,
 };
 
 export const register = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
   try {
     return await authService.register(userData);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || "Registration failed");
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.message || "Registration failed");
   }
 });
 
 export const login = createAsyncThunk("auth/login", async (userData, thunkAPI) => {
   try {
     return await authService.login(userData);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.message || "Login failed");
   }
 });
 
@@ -34,6 +35,11 @@ const authSlice = createSlice({
       authService.logout();
       state.user = null;
     },
+    resetAuthState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -43,7 +49,7 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        state.error = null;
+        state.success = true;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
@@ -55,7 +61,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        state.error = null;
+        state.success = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -64,5 +70,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, resetAuthState } = authSlice.actions;
 export default authSlice.reducer;
