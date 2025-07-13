@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 
+const noteSchema = new mongoose.Schema({
+  text: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const problemSchema = new mongoose.Schema(
   {
     user: {
@@ -7,35 +12,19 @@ const problemSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    title: { 
-        type: String, 
-        required: true
-     },
-    description: {
-        type: String
+    title: {
+      type: String,
+      required: true,
     },
+    description: String,
     category: {
       type: String,
       enum: ["Personal", "Academic", "Business", "Other"],
       default: "Other",
     },
-    notes: {
-      type: String,
-      default: "",
-    },
-    mindMap: {
-      type: Array,
-      default: [],
-    },
-    swot: {
-      strengths: { type: [String], default: [] },
-      weaknesses: { type: [String], default: [] },
-      opportunities: { type: [String], default: [] },
-      threats: { type: [String], default: [] },
-    },
+    notes: [noteSchema],
   },
   { timestamps: true }
 );
-
 
 module.exports = mongoose.model("Problem", problemSchema);

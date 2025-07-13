@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 export default function Dashboard() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
- const { problems = [], loading, error } = useSelector((state) => state.problems || {});
-
+  const { problems = [], loading, error } = useSelector((state) => state.problems || {});
 
   useEffect(() => {
     dispatch(getProblems());
@@ -15,15 +14,10 @@ export default function Dashboard() {
 
   const totalProblems = problems.length;
 
-  const notesCount = problems.filter((p) => p.notes?.trim()).length;
-  const mindMapCount = problems.filter((p) => p.mindMap && Object.keys(p.mindMap).length > 0).length;
-  const swotCount = problems.filter(
-    (p) => p.swot && (
-      p.swot.strengths?.length ||
-      p.swot.weaknesses?.length ||
-      p.swot.opportunities?.length ||
-      p.swot.threats?.length
-    )
+  const notesCount = problems.filter(
+    (p) =>
+      Array.isArray(p.notes) &&
+      p.notes.some((note) => note.text && note.text.trim() !== "")
   ).length;
 
   return (
@@ -38,8 +32,6 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <Stat title="Problems Submitted" value={totalProblems} icon="🧠" />
         <Stat title="Notes Added" value={notesCount} icon="📝" />
-        <Stat title="Mind Maps" value={mindMapCount} icon="🌳" />
-        <Stat title="SWOT Analyses" value={swotCount} icon="📊" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -51,7 +43,7 @@ export default function Dashboard() {
         />
         <Card
           title="Manage Your Problems"
-          description="Edit, analyze, or export your problems."
+          description="Edit, organize, or export your problems."
           buttonLabel="Go to Problems"
           to="/problems"
         />

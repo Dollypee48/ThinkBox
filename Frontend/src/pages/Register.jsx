@@ -33,15 +33,16 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
     const userData = {
-      firstName: form.firstName,
-      lastName: form.lastName,
-      email: form.email,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
       password: form.password,
     };
 
@@ -51,15 +52,16 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-        <h2 className="text-3xl font-bold text-purple-700 text-center mb-6">Create Your ThinkBox Account</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h2 className="text-3xl font-bold text-purple-700 text-center mb-4">Create Your Account</h2>
+        <p className="text-center text-sm text-gray-600 mb-6">Join ThinkBox to start solving smarter</p>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">First Name</label>
               <input
-                name="firstName"
                 type="text"
+                name="firstName"
                 value={form.firstName}
                 onChange={handleChange}
                 className="w-full border rounded p-2 focus:ring-purple-500 focus:border-purple-500"
@@ -69,8 +71,8 @@ export default function Register() {
             <div>
               <label className="block text-sm font-medium mb-1">Last Name</label>
               <input
-                name="lastName"
                 type="text"
+                name="lastName"
                 value={form.lastName}
                 onChange={handleChange}
                 className="w-full border rounded p-2 focus:ring-purple-500 focus:border-purple-500"
@@ -82,8 +84,8 @@ export default function Register() {
           <div>
             <label className="block text-sm font-medium mb-1">Email Address</label>
             <input
-              name="email"
               type="email"
+              name="email"
               value={form.email}
               onChange={handleChange}
               className="w-full border rounded p-2 focus:ring-purple-500 focus:border-purple-500"
@@ -94,8 +96,8 @@ export default function Register() {
           <div>
             <label className="block text-sm font-medium mb-1">Password</label>
             <input
-              name="password"
               type={form.showPassword ? "text" : "password"}
+              name="password"
               value={form.password}
               onChange={handleChange}
               className="w-full border rounded p-2 focus:ring-purple-500 focus:border-purple-500"
@@ -106,8 +108,8 @@ export default function Register() {
           <div>
             <label className="block text-sm font-medium mb-1">Confirm Password</label>
             <input
-              name="confirmPassword"
               type={form.showPassword ? "text" : "password"}
+              name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
               className="w-full border rounded p-2 focus:ring-purple-500 focus:border-purple-500"
@@ -116,8 +118,14 @@ export default function Register() {
           </div>
 
           <div className="flex items-center space-x-2 text-sm">
-            <input type="checkbox" id="showPass" onChange={togglePassword} />
-            <label htmlFor="showPass">Show Password</label>
+            <input
+              type="checkbox"
+              id="showPass"
+              onChange={togglePassword}
+              checked={form.showPassword}
+              className="cursor-pointer"
+            />
+            <label htmlFor="showPass" className="cursor-pointer">Show Password</label>
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

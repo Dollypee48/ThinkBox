@@ -3,23 +3,18 @@ const router = express.Router();
 const {
   createProblem,
   getUserProblems,
-  updateNotes,
-  addMindMapNode,
-  updateSWOT,
   editProblem,
   deleteProblem,
+  addNote,
+  updateNote,
+  deleteNote,
 } = require("../controllers/problemController");
-
 const { protect } = require("../middleware/authMiddleware");
 
-
-
-router.post("/", protect, createProblem);
-router.get("/", protect, getUserProblems);
-router.put("/notes/:id", protect, updateNotes);
-router.post("/mindmap/:id", protect, addMindMapNode);
-router.put("/swot/:id", protect, updateSWOT);
-router.put("/edit/:id", protect, editProblem);
-router.delete("/:id", protect, deleteProblem);
+router.route("/").post(protect, createProblem).get(protect, getUserProblems);
+router.route("/:id/edit").put(protect, editProblem);
+router.route("/:id").delete(protect, deleteProblem);
+router.route("/:id/notes").post(protect, addNote);
+router.route("/:id/notes/:noteId").put(protect, updateNote).delete(protect, deleteNote);
 
 module.exports = router;
