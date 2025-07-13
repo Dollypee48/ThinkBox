@@ -4,6 +4,8 @@ import { getProblems } from "../features/problems/problemSlice";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+const API_BASE_URL = "https://think-box-backend.vercel.app";
+
 export default function ProblemList() {
   const dispatch = useDispatch();
   const { problems, loading, error } = useSelector((state) => state.problems);
@@ -17,7 +19,7 @@ export default function ProblemList() {
 
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      await axios.delete(`http://localhost:5000/api/problems/${id}`, {
+      await axios.delete(`${API_BASE_URL}/api/problems/${id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -64,7 +66,9 @@ export default function ProblemList() {
               <strong>Category:</strong> {problem.category}
             </p>
             <p className="text-sm text-gray-700 mb-2">
-              {problem.description ? problem.description.slice(0, 100) + "..." : "No description provided."}
+              {problem.description
+                ? problem.description.slice(0, 100) + "..."
+                : "No description provided."}
             </p>
             <p className="text-xs text-gray-400 mb-4">
               Submitted: {new Date(problem.createdAt).toLocaleDateString()}
